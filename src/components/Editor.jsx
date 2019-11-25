@@ -14,29 +14,46 @@ import AceEditor from 'react-ace';
 import Beautify from 'js-beautify';
 
 import * as actions from '../store/actions';
+import Modal from './Modals/AnnotationsModal';
 
 class Editor extends React.Component {
-  shouldComponentUpdate(nextProps) {
-    const { code } = this.props;
-    if (code !== nextProps.code) {
-      return true;
+  state = {
+    code: '',
+    annotations: [],
+    isOpen: false
+  };
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (JSON.stringify(this.state) === JSON.stringify(nextState)) {
+      return false;
     }
-    return false;
+    return true;
   }
 
-  onChange = newValue => {
-    const { updateCode } = this.props;
-    updateCode(
-      Beautify(newValue, {
-        indent_size: 2,
-        space_after_anon_function: true,
-        space_after_named_function: true
-      })
-    );
+  onValidate = annotations => {
+    this.setState({
+      annotations: [...annotations]
+    });
+  };
+
+  closeModal = () => this.setState({ isOpen: false });
+
+  onChange = newCode => {
+    this.setState({ code: newCode });
+  };
+
+  exec = () => {
+    const { run } = this.props;
+    const { code, annotations } = this.state;
+    if (annotations.filter(annotation => ['error', 'warning'].includes(annotation.type)).length) {
+      this.setState({ isOpen: true });
+      return;
+    }
+    run(code);
   };
 
   render() {
-    const { code } = this.props;
+    const { code, annotations, isOpen } = this.state;
 
     return (
       <EditorWrapper>
@@ -50,19 +67,43 @@ class Editor extends React.Component {
           tabSize={2}
           enableBasicAutocompletion
           enableLiveAutocompletion
+          onValidate={this.onValidate}
           style={{
             height: '100%',
-            width: '100%'
+            width: '100%',
+            background: '#222'
           }}
           setOptions={{
             copyWithEmptySelection: true,
-            fontFamily: '"Fira code", "Fira Mono", monospace',
+            fontFamily: '"Fira code", "Fira Mono", monospace !important',
             printMargin: 80,
             showPrintMargin: false
           }}
-          debounceChangePeriod={1000}
           onLoad={this.onLoad}
+          commands={[
+            {
+              name: 'run',
+              exec: this.exec,
+              bindKey: { win: 'Alt-Return', mac: 'Command-Return' }
+            },
+            {
+              name: 'beautify',
+              exec: () => {
+                const { code: uglyCode } = this.state;
+                const beautifulCode = Beautify(uglyCode, {
+                  indent_size: 2,
+                  space_after_anon_function: true,
+                  space_after_named_function: true
+                });
+                this.setState({
+                  code: beautifulCode
+                });
+              },
+              bindKey: { win: 'Alt-J', mac: 'Alt-Shift-F' }
+            }
+          ]}
         />
+        <Modal annotations={annotations} opened={isOpen} onClose={this.closeModal} />
       </EditorWrapper>
     );
   }
@@ -73,17 +114,12 @@ const EditorWrapper = styled.div`
   width: 50vw;
 `;
 
-const mapStateToProps = state => ({
-  code: state.code.code
-});
-
 const mapDispatchToProps = dispatch => ({
-  updateCode: newCode => dispatch(actions.updateCode(newCode))
+  run: code => dispatch(actions.run(code))
 });
 
 Editor.propTypes = {
-  code: PropTypes.string.isRequired,
-  updateCode: PropTypes.func.isRequired
+  run: PropTypes.func.isRequired
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Editor);
+export default connect(null, mapDispatchToProps)(Editor);

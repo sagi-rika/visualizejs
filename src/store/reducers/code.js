@@ -11,6 +11,11 @@ export default (state = initialState, action) => {
         ...state,
         code: action.payload.code
       };
+    case actionTypes.RUN:
+      return {
+        ...state,
+        tree: action.payload.tree
+      };
     default:
       return state;
   }
