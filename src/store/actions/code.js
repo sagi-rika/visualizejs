@@ -7,7 +7,9 @@ export const updateCode = newCode => ({
 });
 
 export const run = code => {
-  const tree = Parser.parse(code);
+  const tree = Parser.parse(code, {
+    locations: true
+  });
   return {
     type: actionTypes.RUN,
     payload: { tree }

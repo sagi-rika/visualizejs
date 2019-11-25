@@ -31,8 +31,12 @@ class Editor extends React.Component {
   }
 
   onValidate = annotations => {
+    let { isOpen } = this.state;
+    if (!annotations.length) isOpen = false;
+
     this.setState({
-      annotations: [...annotations]
+      annotations: [...annotations],
+      isOpen
     });
   };
 

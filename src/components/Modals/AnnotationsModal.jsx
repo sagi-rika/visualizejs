@@ -23,11 +23,19 @@ const AnnotationsModal = ({ annotations, opened, onClose }) => {
       marginRight: '-50%',
       transform: 'translate(-50%, -50%)',
       background: '#fdf5e3'
+    },
+    overlay: {
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.7)'
     }
   };
 
   return (
-    <Modal isOpen={opened} onRequestClose={onClose} style={customStyles}>
+    <Modal isOpen={opened} onRequestClose={onClose} style={customStyles} closeTimeoutMS={150}>
       <Header>Fix your errors first, silly.</Header>
       <Grid rows={annotations.length}>
         <Annotation row="Row" type="Type" column="Col" text="Text" />

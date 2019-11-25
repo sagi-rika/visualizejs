@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import error from '../assets/img/error.png';
 import warning from '../assets/img/warning.png';
 import info from '../assets/img/info.png';
-import { ERRORS_TO_IGNORE } from '../utils/consts';
 
 const Annotation = ({ row, text, column, type }) => {
   let annotationImg;
@@ -23,23 +22,20 @@ const Annotation = ({ row, text, column, type }) => {
       annotationImg = '';
   }
 
-  if (!ERRORS_TO_IGNORE.includes(text)) {
-    return (
-      <>
-        {annotationImg ? (
-          <Div>
-            <Img src={annotationImg} alt={type} title={type} />
-          </Div>
-        ) : (
-          <Label>{type}</Label>
-        )}
-        <Label>{isNaN(row) ? row : row + 1}</Label>
-        <Label>{column}</Label>
-        <Text>{text}</Text>
-      </>
-    );
-  }
-  return null;
+  return (
+    <>
+      {annotationImg ? (
+        <Div>
+          <Img src={annotationImg} alt={type} title={type} />
+        </Div>
+      ) : (
+        <Label>{type}</Label>
+      )}
+      <Label>{isNaN(row) ? row : row + 1}</Label>
+      <Label>{column}</Label>
+      <Text>{text}</Text>
+    </>
+  );
 };
 
 Annotation.propTypes = {
