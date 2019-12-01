@@ -5,13 +5,7 @@ import PropTypes from 'prop-types';
 import { astWalk } from './utils/walk';
 import Editor from './components/Editor';
 
-const App = ({ tree }) => {
-  useEffect(() => {
-    if (tree) {
-      astWalk(tree);
-    }
-  }, [tree]);
-
+const App = () => {
   return (
     <div className="App">
       <Editor />
@@ -20,11 +14,11 @@ const App = ({ tree }) => {
 };
 
 App.propTypes = {
-  tree: PropTypes.shape()
+  code: PropTypes.string
 };
 
 const mapStateToProps = state => ({
-  tree: state.code.tree
+  code: state.code.code
 });
 
 export default connect(mapStateToProps)(App);

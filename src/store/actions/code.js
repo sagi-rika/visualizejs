@@ -1,4 +1,5 @@
-import { Parser } from 'acorn';
+/* eslint-disable no-console */
+import { astWalk } from '../../utils/walk';
 import * as actionTypes from './actionTypes';
 
 export const updateCode = newCode => ({
@@ -7,11 +8,9 @@ export const updateCode = newCode => ({
 });
 
 export const run = code => {
-  const tree = Parser.parse(code, {
-    locations: true
-  });
+  astWalk(code);
   return {
     type: actionTypes.RUN,
-    payload: { tree }
+    payload: { code }
   };
 };

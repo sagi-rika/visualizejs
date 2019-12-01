@@ -14,7 +14,7 @@ export default (state = initialState, action) => {
     case actionTypes.RUN:
       return {
         ...state,
-        tree: action.payload.tree
+        code: action.payload.code
       };
     default:
       return state;

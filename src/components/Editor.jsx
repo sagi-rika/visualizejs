@@ -18,7 +18,12 @@ import Modal from './Modals/AnnotationsModal';
 
 class Editor extends React.Component {
   state = {
-    code: '',
+    code: `function myFn(test) {
+  console.log(test);
+  const a = 2;
+}
+const myVar = 'Test String!';
+myFn(myVar);`,
     annotations: [],
     isOpen: false
   };
