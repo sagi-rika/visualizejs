@@ -65,5 +65,6 @@ module.exports = (fn, ...interpolateArgs) => {
   if (argNames && argNames.length) {
     str = interpolate(str, argNames, interpolateArgs);
   }
+
   return str;
 };

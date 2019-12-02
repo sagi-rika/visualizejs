@@ -5,7 +5,7 @@ import stringify from './stringify';
 
 const instruments = {
   ExpressionStatement: (id, node) => {
-    node.update(`${node.source()};`);
+    node.update(`${node.source()}`);
   },
   CallExpression: (id, node, before, after) => {
     let source = node.source();
@@ -37,7 +37,7 @@ const before = (id, node) => {
   const source = JSON.stringify(node.source());
   return stringify(
     (id, type, source) => {
-      boss.send('node:before', { id: $id$, type: '$type$', source: $source$ });
+      boss.send('node:before', { id: $id$, type: '$type$', source: $source$ }), delay();
     },
     id,
     node.type,
@@ -47,7 +47,7 @@ const before = (id, node) => {
 
 const after = (id, node) => {
   return stringify(id => {
-    boss.send('node:after', { id: $id$ });
+    boss.send('node:after', { id: $id$ }), delay();
   }, id);
 };
 

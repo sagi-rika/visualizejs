@@ -4,15 +4,21 @@ import PropTypes from 'prop-types';
 
 import Worker from './plugins/worker';
 import Editor from './components/Editor';
+import BackgroundVisualization from './components/Visualizations/Background';
 
 const App = ({ instrumented }) => {
   const dispatch = useDispatch();
   useEffect(() => {
     if (instrumented) window.worker = Worker(instrumented, dispatch);
+
+    return () => {
+      if (window.worker) window.worker.kill();
+    };
   }, [instrumented, dispatch]);
   return (
     <div className="App">
       <Editor />
+      <BackgroundVisualization />
     </div>
   );
 };

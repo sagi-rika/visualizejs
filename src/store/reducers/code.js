@@ -6,9 +6,6 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case 'NODE_BEFORE':
-      console.log(action.payload);
-      return { ...state };
     case actionTypes.INSTRUMENT:
       return {
         ...state,
