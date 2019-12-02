@@ -1,20 +1,18 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
-  code: ''
+  instrumented: null
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.UPDATE_CODE:
+    case 'NODE_BEFORE':
+      console.log(action.payload);
+      return { ...state };
+    case actionTypes.INSTRUMENT:
       return {
         ...state,
-        code: action.payload.code
-      };
-    case actionTypes.RUN:
-      return {
-        ...state,
-        code: action.payload.code
+        instrumented: action.payload.instrumented
       };
     default:
       return state;

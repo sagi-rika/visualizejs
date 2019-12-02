@@ -52,13 +52,13 @@ myFn(myVar);`,
   };
 
   exec = () => {
-    const { run } = this.props;
+    const { instrument } = this.props;
     const { code, annotations } = this.state;
     if (annotations.filter(annotation => ['error', 'warning'].includes(annotation.type)).length) {
       this.setState({ isOpen: true });
       return;
     }
-    run(code);
+    instrument(code);
   };
 
   render() {
@@ -124,11 +124,11 @@ const EditorWrapper = styled.div`
 `;
 
 const mapDispatchToProps = dispatch => ({
-  run: code => dispatch(actions.run(code))
+  instrument: code => dispatch(actions.instrument(code))
 });
 
 Editor.propTypes = {
-  run: PropTypes.func.isRequired
+  instrument: PropTypes.func.isRequired
 };
 
 export default connect(null, mapDispatchToProps)(Editor);

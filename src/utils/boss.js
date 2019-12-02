@@ -1,20 +1,21 @@
+/* eslint-disable */
 const stringify = require('./stringify');
 
-const emitterFor = scope => {
+function emitterFor(scope) {
   const inWebworkerThread = typeof Window === 'undefined';
 
   const onMessage = message => {
     message = JSON.parse(message.data);
 
-    if (!message.weevil) return;
+    if (!message.boss) return;
 
-    const cbs = weevil.callbacks[message.name];
+    const cbs = boss.callbacks[message.name];
     if (!cbs || !cbs.length) return;
 
     cbs.forEach(cb => cb(...message.args));
   };
 
-  const weevil = {
+  const boss = {
     callbacks: {},
     once: function(name, fn) {
       const on = (...args) => {
@@ -46,7 +47,7 @@ const emitterFor = scope => {
         JSON.stringify({
           name,
           args,
-          weevil: true
+          boss: true
         })
       );
 
@@ -65,21 +66,21 @@ const emitterFor = scope => {
 
   scope.addEventListener('message', onMessage, false);
 
-  return weevil;
-};
+  return boss;
+}
 
 const prelude = stringify(emitterCode => {
-  const weevil = (() => {
+  const boss = (() => {
     // Import emitter code
     $emitterCode$;
 
     return emitterFor(self);
   })();
 
-  // user code, with access to weevil;
+  // user code, with access to boss;
 }, emitterFor.toString());
 
-const weevil = code => {
+const boss = code => {
   code = stringify(
     (prelude, code) => {
       // Prelude code
@@ -98,4 +99,4 @@ const weevil = code => {
   return emitterFor(worker);
 };
 
-module.exports = weevil;
+module.exports = boss;

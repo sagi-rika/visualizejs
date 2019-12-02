@@ -1,1 +1,1 @@
-export { updateCode, run } from './code';
+export { instrument } from './code';

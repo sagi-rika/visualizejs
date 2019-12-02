@@ -1,11 +1,15 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { astWalk } from './utils/walk';
+import Worker from './plugins/worker';
 import Editor from './components/Editor';
 
-const App = () => {
+const App = ({ instrumented }) => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (instrumented) window.worker = Worker(instrumented, dispatch);
+  }, [instrumented, dispatch]);
   return (
     <div className="App">
       <Editor />
@@ -13,12 +17,16 @@ const App = () => {
   );
 };
 
-App.propTypes = {
-  code: PropTypes.string
-};
-
 const mapStateToProps = state => ({
-  code: state.code.code
+  instrumented: state.code.instrumented
 });
+
+App.propTypes = {
+  instrumented: PropTypes.shape({
+    chunks: PropTypes.arrayOf(PropTypes.string),
+    toString: PropTypes.func,
+    inspect: PropTypes.func
+  })
+};
 
 export default connect(mapStateToProps)(App);
