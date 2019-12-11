@@ -33,11 +33,6 @@ export default (state = initialState, action) => {
         ...state,
         activeLine: {}
       };
-    case actionTypes.FINISHED_RUNNING:
-      return {
-        ...state,
-        running: false
-      };
     default:
       return state;
   }

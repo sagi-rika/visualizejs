@@ -9,7 +9,3 @@ export const instrument = code => {
     payload: { instrumented: instrumented.code }
   };
 };
-
-export const finishedRunning = () => ({
-  type: actionTypes.FINISHED_RUNNING
-});

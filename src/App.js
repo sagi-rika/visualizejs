@@ -14,7 +14,6 @@ const App = ({ instrumented }) => {
 
     return () => {
       if (window.worker) window.worker.kill();
-      dispatch({ type: actionTypes.FINISHED_RUNNING });
     };
   }, [instrumented, dispatch]);
   return (
