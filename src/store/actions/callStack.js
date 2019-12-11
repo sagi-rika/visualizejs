@@ -1,10 +1,11 @@
 import * as actionTypes from './actionTypes';
 
-export const callStackPush = (id, type, source) => ({
+export const callStackPush = (id, type, source, loc) => ({
   type: actionTypes.CALL_STACK_PUSH,
   payload: {
     id,
-    source
+    source,
+    loc
   }
 });
 

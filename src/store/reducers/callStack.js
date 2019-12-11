@@ -11,11 +11,14 @@ export default (state = initialState, action) => {
         ...state,
         stack: [...state.stack, { ...action.payload }]
       };
-    case actionTypes.CALL_STACK_POP:
+    case actionTypes.CALL_STACK_POP: {
+      const stack = [...state.stack];
+      stack.shift();
       return {
         ...state,
-        stack: state.stack.filter((_, i) => i !== state.stack.length - 1)
+        stack
       };
+    }
     default:
       return state;
   }

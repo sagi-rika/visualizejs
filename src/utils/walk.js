@@ -35,13 +35,15 @@ const instrumentNode = (id, node, before, after) => {
 
 const before = (id, node) => {
   const source = JSON.stringify(node.source());
+  const loc = JSON.stringify(node.loc);
   return stringify(
-    (id, type, source) => {
-      boss.send('node:before', { id: $id$, type: '$type$', source: $source$ }), delay();
+    (id, type, source, loc) => {
+      boss.send('node:before', { id: $id$, type: '$type$', source: $source$, loc: $loc$ }), delay();
     },
     id,
     node.type,
-    source
+    source,
+    loc
   );
 };
 

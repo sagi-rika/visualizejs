@@ -18,9 +18,9 @@ export default (instrumented, dispatch) => {
   window.worker = boss(instrumented);
   consoleClient.createClient(window, window.worker);
 
-  window.worker.on('node:before', ({ id, type, source }) => {
+  window.worker.on('node:before', ({ id, type, source, loc }) => {
     console.log(`id: ${id}, type: ${type}, source: ${source}`);
-    dispatch(actions.callStackPush(id, type, source));
+    dispatch(actions.callStackPush(id, type, source, loc));
   });
 
   window.worker.on('node:after', () => {

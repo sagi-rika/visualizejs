@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
+import * as actionTypes from './store/actions/actionTypes';
 import Worker from './plugins/worker';
 import Editor from './components/Editor';
 import BackgroundVisualization from './components/Visualizations/Background';
@@ -13,6 +14,7 @@ const App = ({ instrumented }) => {
 
     return () => {
       if (window.worker) window.worker.kill();
+      dispatch({ type: actionTypes.FINISHED_RUNNING });
     };
   }, [instrumented, dispatch]);
   return (

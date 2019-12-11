@@ -42,3 +42,27 @@ label {
 .ReactModal__Overlay--before-close {
   opacity: 0;
 }
+
+.my-node-enter {
+  opacity: 0;
+}
+
+.my-node-enter-active {
+  opacity: 1;
+  transition: opacity 400ms;
+}
+
+.my-node-exit {
+  opacity: 1;
+}
+
+.my-node-exit-active {
+  opacity: 0;
+  transition: opacity 400ms;
+}
+
+.activeLine {
+  position: absolute;
+  background: rgba(235, 77, 75, 0.5);
+  z-index: 1000;
+}

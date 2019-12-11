@@ -29,7 +29,10 @@ myFn(myVar);`,
   };
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (JSON.stringify(this.state) === JSON.stringify(nextState)) {
+    if (
+      JSON.stringify(this.state) === JSON.stringify(nextState) &&
+      JSON.stringify(this.props) === JSON.stringify(nextProps)
+    ) {
       return false;
     }
     return true;
@@ -63,6 +66,8 @@ myFn(myVar);`,
 
   render() {
     const { code, annotations, isOpen } = this.state;
+    const { activeLineMarker } = this.props;
+    console.log(activeLineMarker);
 
     return (
       <EditorWrapper>
@@ -77,6 +82,7 @@ myFn(myVar);`,
           enableBasicAutocompletion
           enableLiveAutocompletion
           onValidate={this.onValidate}
+          markers={[activeLineMarker]}
           style={{
             height: '100%',
             width: '100%',
@@ -123,6 +129,10 @@ const EditorWrapper = styled.div`
   width: 50vw;
 `;
 
+const mapStateToProps = state => ({
+  activeLineMarker: state.code.activeLine
+});
+
 const mapDispatchToProps = dispatch => ({
   instrument: code => dispatch(actions.instrument(code))
 });
@@ -131,4 +141,4 @@ Editor.propTypes = {
   instrument: PropTypes.func.isRequired
 };
 
-export default connect(null, mapDispatchToProps)(Editor);
+export default connect(mapStateToProps, mapDispatchToProps)(Editor);
