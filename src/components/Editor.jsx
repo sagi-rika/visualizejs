@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+
 // eslint-disable-next-line no-unused-vars
 import _ from 'ace-builds';
 import 'ace-builds/webpack-resolver';
@@ -15,6 +16,7 @@ import Beautify from 'js-beautify';
 
 import * as actions from '../store/actions';
 import Modal from './Modals/AnnotationsModal';
+import StatusBar from './StatusBar';
 
 class Editor extends React.Component {
   state = {
@@ -25,7 +27,8 @@ class Editor extends React.Component {
 const myVar = 'Test String!';
 myFn(myVar);`,
     annotations: [],
-    isOpen: false
+    isOpen: false,
+    cursor: {}
   };
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -65,9 +68,8 @@ myFn(myVar);`,
   };
 
   render() {
-    const { code, annotations, isOpen } = this.state;
+    const { code, annotations, isOpen, cursor } = this.state;
     const { activeLineMarker } = this.props;
-    console.log(activeLineMarker);
 
     return (
       <EditorWrapper>
@@ -76,6 +78,9 @@ myFn(myVar);`,
           value={code}
           theme="tomorrow_night_bright"
           onChange={this.onChange}
+          onCursorChange={({ cursor }) =>
+            this.setState({ cursor: { row: cursor.row + 1, col: cursor.column } })
+          }
           name="UNIQUE_ID_OF_DIV"
           fontSize={15}
           tabSize={2}
@@ -119,12 +124,14 @@ myFn(myVar);`,
           ]}
         />
         <Modal annotations={annotations} opened={isOpen} onClose={this.closeModal} />
+        <StatusBar cursor={cursor} />
       </EditorWrapper>
     );
   }
 }
 
 const EditorWrapper = styled.div`
+  position: relative;
   height: 100vh;
   width: 50vw;
 `;
@@ -138,7 +145,13 @@ const mapDispatchToProps = dispatch => ({
 });
 
 Editor.propTypes = {
-  instrument: PropTypes.func.isRequired
+  instrument: PropTypes.func.isRequired,
+  activeLineMarker: PropTypes.shape({
+    startRow: PropTypes.number,
+    startColumn: PropTypes.number,
+    endRow: PropTypes.number,
+    endColumn: PropTypes.number
+  })
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Editor);

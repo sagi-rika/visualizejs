@@ -8,6 +8,7 @@ const instruments = {
     node.update(`${node.source()}`);
   },
   CallExpression: (id, node, before, after) => {
+    console.log(node);
     let source = node.source();
 
     if (node.callee.source() === 'console.log') {
@@ -16,9 +17,19 @@ const instruments = {
         .join(', ')})`;
     }
 
-    const newString = `${before(id, node)} 
-    ${source} 
-    ${after(id, node)}`;
+    let newString;
+
+    // If function has no block (no parentheses)
+    if (node.parent.type === 'ArrowFunctionExpression') {
+      newString = `{${before(id, node)} 
+      ${source} 
+      ${after(id, node)}}`;
+    } else {
+      newString = `${before(id, node)} 
+      ${source} 
+      ${after(id, node)}`;
+    }
+
     node.update(newString);
   },
   BinaryExpression: (id, node, before, after) => {

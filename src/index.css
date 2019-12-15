@@ -27,7 +27,7 @@ html {
 
 p,
 label {
-  font-size: 1.8rem !important;
+  font-size: 1.8rem;
 }
 
 .ReactModal__Overlay {

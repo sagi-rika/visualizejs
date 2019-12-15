@@ -1,7 +1,8 @@
 import * as actions from '../store/actions';
 import boss from '../utils/boss';
 import stringify from '../utils/stringify';
-import consoleClient from './console';
+import { createConsoleClient, consoleServer } from './console';
+import { timeoutServer, immediateServer } from './timeout';
 
 function delay() {
   const start = new Date().getTime();
@@ -11,19 +12,35 @@ function delay() {
   }
 }
 
+const prependCode = (prepend, code) => `
+${prepend}
+${code}`;
+
 export default (instrumented, dispatch) => {
-  instrumented = consoleClient.prependWorkerCode(instrumented);
-  instrumented = `${stringify(delay)}}
-  ${instrumented}`;
+  instrumented = prependCode(timeoutServer, instrumented);
+  instrumented = prependCode(immediateServer, instrumented);
+  instrumented = prependCode(consoleServer, instrumented);
+  instrumented = prependCode(`${stringify(delay)}}`, instrumented);
   window.worker = boss(instrumented);
-  consoleClient.createClient(window, window.worker);
+  createConsoleClient(window, window.worker);
 
   window.worker.on('node:before', ({ id, type, source, loc }) => {
-    console.log(`id: ${id}, type: ${type}, source: ${source}`);
     dispatch(actions.callStackPush(id, type, source, loc));
   });
 
   window.worker.on('node:after', () => {
     dispatch(actions.callStackPop());
+  });
+
+  window.worker.on('timeout:created', data => {
+    console.log('timeout created!');
+  });
+
+  window.worker.on('timeout:started', data => {
+    console.log('timeout started!');
+  });
+
+  window.worker.on('timeout:finished', data => {
+    console.log('timeout finished!');
   });
 };

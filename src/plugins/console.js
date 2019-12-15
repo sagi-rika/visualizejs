@@ -1,11 +1,7 @@
 /* eslint-disable */
 const stringify = require('../utils/stringify');
 
-module.exports.prependWorkerCode = code => `
-${this.server};
-${code}`;
-
-module.exports.server = stringify(() => {
+export const consoleServer = stringify(() => {
   const _console = {};
 
   _console.log = (...args) => {
@@ -13,10 +9,9 @@ module.exports.server = stringify(() => {
   };
 });
 
-module.exports.createClient = (codeModel, emitter) => {
+export const createConsoleClient = (codeModel, emitter) => {
   emitter.on('console:log', (...args) => {
-    args.unshift('color: coral; font-weight: bold;');
-    args.unshift('%c VisualizeJS @ %d >');
+    args = ['%c VisualizeJS @ %d >', 'color: coral; font-weight: bold;', ...args];
     console.log(...args);
   });
 };
