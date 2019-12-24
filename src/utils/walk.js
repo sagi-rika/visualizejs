@@ -8,7 +8,6 @@ const instruments = {
     node.update(`${node.source()}`);
   },
   CallExpression: (id, node, before, after) => {
-    console.log(node);
     let source = node.source();
 
     if (node.callee.source() === 'console.log') {
@@ -68,6 +67,7 @@ export default code => {
   const insertionPoints = [];
   let id = 1;
   const instrumented = falafel(code, { parser: acorn, locations: true, range: true }, node => {
+    if (node.type === 'Program') console.log(node);
     if (!isInstrumentable(node)) return;
     insertionPoints.push({
       id,

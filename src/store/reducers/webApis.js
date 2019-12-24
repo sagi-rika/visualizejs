@@ -1,25 +1,28 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
-  stack: []
+  apis: {}
 };
 
 export default (state = initialState, action) => {
-  const stack = [...state.stack];
+  const apis = { ...state.apis };
   switch (action.type) {
-    case actionTypes.CALL_STACK_PUSH:
-      stack.push(action.payload);
+    case actionTypes.WEB_API_ADD: {
+      const { id, ...rest } = action.payload;
+      apis[id] = { ...rest };
 
       return {
         ...state,
-        stack
+        apis
       };
-    case actionTypes.CALL_STACK_POP: {
-      stack.pop();
+    }
+    case actionTypes.WEB_API_REMOVE: {
+      const { id } = action.payload;
+      delete apis[id];
 
       return {
         ...state,
-        stack
+        apis
       };
     }
     default:

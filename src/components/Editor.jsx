@@ -20,15 +20,10 @@ import StatusBar from './StatusBar';
 
 class Editor extends React.Component {
   state = {
-    code: `function myFn(test) {
-  console.log(test);
-  const a = 2;
-}
-const myVar = 'Test String!';
-myFn(myVar);`,
+    code: `setTimeout(() => console.log('a'), 100000)`,
     annotations: [],
     isOpen: false,
-    cursor: {}
+    currentCursor: {}
   };
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -68,7 +63,7 @@ myFn(myVar);`,
   };
 
   render() {
-    const { code, annotations, isOpen, cursor } = this.state;
+    const { code, annotations, isOpen, currentCursor } = this.state;
     const { activeLineMarker } = this.props;
 
     return (
@@ -79,7 +74,7 @@ myFn(myVar);`,
           theme="tomorrow_night_bright"
           onChange={this.onChange}
           onCursorChange={({ cursor }) =>
-            this.setState({ cursor: { row: cursor.row + 1, col: cursor.column } })
+            this.setState({ currentCursor: { row: cursor.row + 1, col: cursor.column } })
           }
           name="UNIQUE_ID_OF_DIV"
           fontSize={15}
@@ -124,7 +119,7 @@ myFn(myVar);`,
           ]}
         />
         <Modal annotations={annotations} opened={isOpen} onClose={this.closeModal} />
-        <StatusBar cursor={cursor} />
+        <StatusBar cursor={currentCursor} />
       </EditorWrapper>
     );
   }

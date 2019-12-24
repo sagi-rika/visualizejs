@@ -4,19 +4,25 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import CallStack from './CallStack';
+import WebApis from './WebApis';
 
-const BackgroundVisualization = ({ stack }) => (
-  <Wrapper>
-    <CallStack stack={stack} />
-  </Wrapper>
+const BackgroundVisualization = ({ stack, apis }) => (
+  <>
+    <Wrapper>
+      <CallStack stack={stack} />
+      <WebApis apis={apis} />
+    </Wrapper>
+  </>
 );
 
 const mapStateToProps = state => ({
-  stack: state.callStack.stack
+  stack: state.callStack.stack,
+  apis: state.webApis.apis
 });
 
 const Wrapper = styled.div`
-  height: 100vh;
+  display: flex;
+  height: 70%;
   width: 50%;
   position: fixed;
   top: 0;

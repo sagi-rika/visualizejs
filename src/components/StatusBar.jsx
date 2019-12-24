@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const StatusBar = ({ cursor }) => (
@@ -23,5 +24,12 @@ const StatusBarWrap = styled.div`
   left: 0;
   width: 100%;
 `;
+
+StatusBar.propTypes = {
+  cursor: PropTypes.shape({
+    row: PropTypes.number,
+    col: PropTypes.number
+  })
+};
 
 export default StatusBar;

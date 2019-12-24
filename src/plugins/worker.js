@@ -33,11 +33,12 @@ export default (instrumented, dispatch) => {
   });
 
   window.worker.on('timeout:created', data => {
-    console.log('timeout created!');
+    console.log(data);
+    dispatch(actions.webApisAdd(data));
   });
 
   window.worker.on('timeout:started', data => {
-    console.log('timeout started!');
+    dispatch(actions.webApisRemove(data.id));
   });
 
   window.worker.on('timeout:finished', data => {

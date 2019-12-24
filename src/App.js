@@ -2,10 +2,11 @@ import React, { useEffect } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import * as actionTypes from './store/actions/actionTypes';
+import { css } from '@emotion/core';
+
 import Worker from './plugins/worker';
 import Editor from './components/Editor';
-import BackgroundVisualization from './components/Visualizations/Background';
+import BackgroundVisualization from './components/Visualizations/Runtime';
 
 const App = ({ instrumented }) => {
   const dispatch = useDispatch();
