@@ -33,7 +33,6 @@ export default (instrumented, dispatch) => {
   });
 
   window.worker.on('timeout:created', data => {
-    console.log(data);
     dispatch(actions.webApisAdd(data));
   });
 

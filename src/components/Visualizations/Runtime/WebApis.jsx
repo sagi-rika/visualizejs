@@ -29,9 +29,10 @@ const WebApiList = styled(Border)`
 `;
 
 const FlexTransitionGroup = styled(TransitionGroup)`
-  width: 70%;
+  width: 85%;
   display: flex;
   flex-flow: column nowrap;
+  padding-top: 1rem;
 `;
 
 const moveRight = keyframes`
@@ -68,6 +69,27 @@ const WebApi = styled.div`
     transform: translateX(-100%);
     animation: ${({ time }) => time / 1000}s ${moveRight} forwards ease-in;
     z-index: -1;
+  }
+
+  &::after {
+    content: "${({ time }) => `${time / 1000}s` || 'Unknown'}";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgb(255, 165, 0);
+    opacity: 0;
+    transition: 0.3s ease-out;
+    color: #fff;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &:hover::after {
+    opacity: 1;
   }
 `;
 

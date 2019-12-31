@@ -44,8 +44,17 @@ const instrumentNode = (id, node, before, after) => {
 };
 
 const before = (id, node) => {
-  const source = JSON.stringify(node.source());
+  let source = JSON.stringify(node.source());
   const loc = JSON.stringify(node.loc);
+
+  if (node.type === 'CallExpression') {
+    node.arguments.forEach(argNode => {
+      if (['ArrowFunctionExpression', 'FunctionExpression'].includes(argNode.type)) {
+        source = `'${node.callee.name}(${argNode.id ? argNode.id.name : 'anonymous'}())'`;
+      }
+    });
+  }
+
   return stringify(
     (id, type, source, loc) => {
       boss.send('node:before', { id: $id$, type: '$type$', source: $source$, loc: $loc$ }), delay();
@@ -92,17 +101,3 @@ export default code => {
     insertionPoints
   };
 };
-
-/*
-Steps:
-
-1. User writes code, as long as he wishes.
-2. We parse the code into an AST.
-3. We walk the code recursively, checking node types while doing so.
-4. When we want to display something onscreen, we instrument the relevant node by adding code before and after it.
-5. The code (which will be executed by a webworker) should use worker.send in order to notify our app of changes (i.e. new Callstack block).
-6. When we finish instrumenting every relevant node, we pas the code to a webworker eval.
-7. The webworker will run the user's code with our additions, resulting in UI changes while the user's code runs!
-8. We should also define plugins for console.logs, DOM queries and Timeouts.
-
-*/
