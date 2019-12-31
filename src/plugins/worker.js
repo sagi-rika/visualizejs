@@ -3,6 +3,7 @@ import boss from '../utils/boss';
 import stringify from '../utils/stringify';
 import { createConsoleClient, consoleServer } from './console';
 import { timeoutServer, immediateServer } from './timeout';
+import { createAlertClient, alertServer } from './alert';
 
 function delay() {
   const start = new Date().getTime();
@@ -20,9 +21,11 @@ export default (instrumented, dispatch) => {
   instrumented = prependCode(timeoutServer, instrumented);
   instrumented = prependCode(immediateServer, instrumented);
   instrumented = prependCode(consoleServer, instrumented);
+  instrumented = prependCode(alertServer, instrumented);
   instrumented = prependCode(`${stringify(delay)}}`, instrumented);
   window.worker = boss(instrumented);
   createConsoleClient(window, window.worker);
+  createAlertClient(window, window.worker);
 
   window.worker.on('node:before', ({ id, type, source, loc }) => {
     dispatch(actions.callStackPush(id, type, source, loc));
